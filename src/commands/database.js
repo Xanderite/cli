@@ -17,9 +17,15 @@ exports.handler = async function (args) {
   const sequelize = getDatabaseLessSequelize();
   const config = helpers.config.readConfig();
 
+  let dbName = config.database;
+
+  if (config.dialect === 'postgres') {
+    dbName = `"${dbName}"`;
+  }
+
   switch (command) {
     case 'db:create':
-      await sequelize.query(`CREATE DATABASE ${config.database}`, {
+      await sequelize.query(`CREATE DATABASE ${dbName}`, {
         type: sequelize.QueryTypes.RAW
       }).catch(e => {
         helpers.view.error(`Error: ${e.message}`);
@@ -34,7 +40,7 @@ exports.handler = async function (args) {
 
       break;
     case 'db:drop':
-      await sequelize.query(`DROP DATABASE ${config.database}`, {
+      await sequelize.query(`DROP DATABASE ${dbName}`, {
         type: sequelize.QueryTypes.RAW
       }).catch(e => {
         helpers.view.error(`Error: ${e.message}`);
