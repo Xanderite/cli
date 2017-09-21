@@ -160,7 +160,7 @@ const api = {
     try {
       const urlParts = url.parse(urlString);
       let result   = {
-        database: urlParts.pathname.replace(/^\//,  ''),
+        database: decodeURI(urlParts.pathname.replace(/^\//,  '')),
         host:     urlParts.hostname,
         port:     urlParts.port,
         protocol: urlParts.protocol.replace(/:$/, ''),
